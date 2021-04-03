@@ -1,4 +1,4 @@
-#include <logger.h>
+#include "logger.h"
 
 void* loggerMain(void* arg_logger) {
     /** CORE FUNCTIONALITY OF LOGGER IMPLEMENTED HERE.

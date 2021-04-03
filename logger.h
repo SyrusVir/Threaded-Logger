@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <time.h>
-#include <fifo.h>
+#include "General-FIFO/fifo.h"
 
 typedef enum LoggerCommand {
     LOG,
