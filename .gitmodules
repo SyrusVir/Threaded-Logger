@@ -1,0 +1,3 @@
+[submodule "General-FIFO"]
+	path = General-FIFO
+	url = https://github.com/SyrusVir/General-FIFO
