@@ -63,7 +63,7 @@ void* loggerMain(void* arg_logger)
          * no longer needed 
          */
         logger->status = LOGGER_STOPPED;
-        return;
+        return NULL;
     } // end while(!loop_stop)
 } // end loggerMain
 
