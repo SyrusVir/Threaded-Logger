@@ -62,9 +62,10 @@ void* loggerMain(void* arg_logger)
          * Producer(s) to deallocate memory for the Consumer when all Producers agree that it is 
          * no longer needed 
          */
-        logger->status = LOGGER_STOPPED;
-        return NULL;
     } // end while(!loop_stop)
+
+    logger->status = LOGGER_STOPPED;
+    return NULL;
 } // end loggerMain
 
 //Constructors
