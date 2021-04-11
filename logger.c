@@ -10,9 +10,9 @@ void* loggerMain(void* arg_logger)
     bool loop_stop = false;
     while (!loop_stop) 
     {
-        logger->status = LOGGER_IDLE;
+        logger->status = LOGGER_STAT_IDLE;
         logger_msg_t* rec_msg = (logger_msg_t*)fifoPull(logger->buffer,true);
-        logger->status = LOGGER_WORKING;
+        logger->status = LOGGER_STAT_WORKING;
         
         // if NULL msg received, log event and go to next loop iteration
         if (rec_msg == NULL) 
@@ -27,7 +27,7 @@ void* loggerMain(void* arg_logger)
         
         switch (rec_msg->cmd)
         {
-        case LOGGER_LOG:;  //semicolon allows variable declaration following case label
+        case LOGGER_CMD_LOG:;  //semicolon allows variable declaration following case label
             FILE* f = fopen(rec_msg->path, "a");
             if (f == NULL) 
             {
@@ -47,7 +47,7 @@ void* loggerMain(void* arg_logger)
             }
             fclose(f);
             break;
-        case LOGGER_STOP:;
+        case LOGGER_CMD_STOP:;
             loop_stop = true;
             break;
         default:
@@ -64,7 +64,7 @@ void* loggerMain(void* arg_logger)
          */
     } // end while(!loop_stop)
 
-    logger->status = LOGGER_STOPPED;
+    logger->status = LOGGER_STAT_STOPPED;
     return NULL;
 } // end loggerMain
 
@@ -113,7 +113,7 @@ logger_t* loggerCreate(uint16_t buffer_size)
     logger_t* logger = (logger_t*) malloc(sizeof(stat_log_file) + sizeof(stat_log_path)+sizeof(*buffer));
     logger->buffer = buffer;
     logger->stat_log_path = stat_log_path;
-    logger->status = LOGGER_UNINIT;
+    logger->status = LOGGER_STAT_UNINIT;
     
     return logger; 
 }
@@ -161,12 +161,12 @@ int logStatus(logger_t* buffer, char* msg)
 
 int loggerSendLogMsg(logger_t* logger, char* data_str, size_t data_str_size, char* path, int priority, bool blocking) 
 {
-    void* data = (void*) loggerMsgCreate(LOGGER_LOG, data_str, data_str_size, path);
+    void* data = (void*) loggerMsgCreate(LOGGER_CMD_LOG, data_str, data_str_size, path);
     return fifoPush(logger->buffer,data, priority, blocking);
 }
 
 int loggerSendCloseMsg(logger_t* logger, int priority, bool blocking) 
 {
-    void* data = (void*) loggerMsgCreate(LOGGER_STOP, " ", sizeof(" "), " ");
+    void* data = (void*) loggerMsgCreate(LOGGER_CMD_STOP, " ", sizeof(" "), " ");
     return fifoPush(logger->buffer,data, priority, blocking);
 }

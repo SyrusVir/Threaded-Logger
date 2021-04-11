@@ -12,15 +12,15 @@
 #include "General-FIFO/fifo.h"
 
 typedef enum LoggerStatus {
-    LOGGER_UNINIT,
-    LOGGER_IDLE,
-    LOGGER_WORKING,
-    LOGGER_STOPPED
+    LOGGER_STAT_UNINIT,
+    LOGGER_STAT_IDLE,
+    LOGGER_STAT_WORKING,
+    LOGGER_STAT_STOPPED
 } logger_status_t;
 
 typedef enum LoggerCommand {
-    LOGGER_LOG,
-    LOGGER_STOP
+    LOGGER_CMD_LOG,
+    LOGGER_CMD_STOP
 } logger_cmd_t;
 
 typedef struct LoggerMessage {
