@@ -28,7 +28,7 @@ void* loggerMain(void* arg_logger)
         switch (rec_msg->cmd)
         {
         case LOGGER_CMD_LOG:;  //semicolon allows variable declaration following case label
-            FILE* f = fopen(rec_msg->path, "a");
+            FILE* f = fopen(rec_msg->path, rec_msg->mode);
             if (f == NULL) 
             {
                 char msg[] = "loggerMain: Error opening provided path"; 
@@ -127,14 +127,14 @@ logger_msg_t** loggerDestroy(logger_t* logger)
     return (logger_msg_t**)fifoBufferClose(buffer); // flush its message buffer
 }
 
-logger_msg_t* loggerMsgCreate(logger_cmd_t cmd, char* data_str, size_t data_size, char* path) 
+logger_msg_t* loggerMsgCreate(logger_cmd_t cmd, char* data_str, size_t data_size, char* path, char* mode) 
 {
     logger_msg_t* msg_out = (logger_msg_t*)malloc(sizeof(logger_msg_t));
     msg_out->cmd = cmd;
     msg_out->data = strndup(data_str, data_size);
     msg_out->data_leng = data_size;
     msg_out->path = strdup(path);
-
+    msg_out->mode = strdup(mode);
     return msg_out;
 }
 
@@ -142,6 +142,7 @@ void loggerMsgDestroy(logger_msg_t* msg)
 {
     free(msg->data);
     free(msg->path);
+    free(msg->mode);
     free(msg);
 }
 
@@ -159,14 +160,14 @@ int logStatus(logger_t* buffer, char* msg)
     }
 }
 
-int loggerSendLogMsg(logger_t* logger, char* data_str, size_t data_str_size, char* path, int priority, bool blocking) 
+int loggerSendLogMsg(logger_t* logger, char* data_str, size_t data_str_size, char* path, const char* mode, int priority, bool blocking) 
 {
-    void* data = (void*) loggerMsgCreate(LOGGER_CMD_LOG, data_str, data_str_size, path);
+    void* data = (void*) loggerMsgCreate(LOGGER_CMD_LOG, data_str, data_str_size, path, mode);
     return fifoPush(logger->buffer,data, priority, blocking);
 }
 
 int loggerSendCloseMsg(logger_t* logger, int priority, bool blocking) 
 {
-    void* data = (void*) loggerMsgCreate(LOGGER_CMD_STOP, " ", sizeof(" "), " ");
+    void* data = (void*) loggerMsgCreate(LOGGER_CMD_STOP, " ", sizeof(" "), " ", " ");
     return fifoPush(logger->buffer,data, priority, blocking);
 }
