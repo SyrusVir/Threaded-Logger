@@ -121,6 +121,7 @@ logger_t* loggerCreate(uint16_t buffer_size)
 //Destructors
 logger_msg_t** loggerDestroy(logger_t* logger) 
 {
+    if (logger == NULL) return NULL;
     fifo_buffer_t* buffer = logger->buffer; // save buffer pointer
     free(logger->stat_log_path); // destroy status log path string
     free(logger); // destroy logger itself
