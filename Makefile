@@ -3,7 +3,7 @@ CFLAGS= -g -O -Wall -Wextra
 OBJ= logger.o
 LIBS = -lpthread
 INCLUDE = -I. 
-FIFOPATH = ./General-FIFO
+FIFOPATH = $(CURDIR)/General-FIFO
 ARFLAGS= -rcs
 
 
