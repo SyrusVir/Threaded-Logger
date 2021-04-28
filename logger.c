@@ -37,7 +37,7 @@ void* loggerMain(void* arg_logger)
             }
             else 
             {
-                printf("Writing \"%s\"\n", rec_msg->data);
+                // printf("Writing \"%s\"\n", rec_msg->data);
                 if (fprintf(f,"%s",rec_msg->data) < 0) 
                 {
                     char msg[] = "loggerMain: Error writing to provided path";
