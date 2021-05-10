@@ -92,18 +92,21 @@ logger_t* loggerCreate(uint16_t buffer_size)
     {
         printf("ERROR OPENING STAT LOG FILE REFERENCE\n");
     }
+    else
+    {
+        //write current time and separator to file
+        uint8_t timestring_size = 32;
+        char sep[] = "-----------------------------------\n";
+        char timestring[timestring_size];
+        struct tm now;
+        time_t rawtime = time(NULL);
+        gmtime_r(&rawtime,&now);
+        strftime(timestring, timestring_size,"\n%F %T %Z\n",&now);
+        fprintf(stat_log_file,"%s", timestring);
+        fprintf(stat_log_file,"%s", sep);
+        fclose(stat_log_file);
+    }
     
-    //write current time and separator to file
-    uint8_t timestring_size = 32;
-    char sep[] = "-----------------------------------\n";
-    char timestring[timestring_size];
-    struct tm now;
-    time_t rawtime = time(NULL);
-    gmtime_r(&rawtime,&now);
-    strftime(timestring, timestring_size,"\n%F %T %Z\n",&now);
-    fprintf(stat_log_file,"%s", timestring);
-    fprintf(stat_log_file,"%s", sep);
-    fclose(stat_log_file);
     /////////////////////////////////////////////////////////////////
 
     //Buffer initialization
